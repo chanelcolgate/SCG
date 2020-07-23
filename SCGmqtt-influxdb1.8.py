@@ -18,8 +18,15 @@ def on_message(client, userdata, msg):
     data = pd.DataFrame(data)
     data[['device', 'parameter']] = data.tag.str.split(':', expand=True)
     data['topic'] = topic
-    ts = objpayload['ts']
-    data['time'] = datetime.datetime.strptime(ts[0:19], "%Y-%m-%dT%H:%M:%S")
+    data['time'] = datetime.datetime.utcnow()
+    local = datetime.datetime.now()
+    if (local.hour >=7) and (local<15):
+        ca = "ca1"
+    elif (local.hour >=15) and (local<23):
+        ca = "ca2"
+    else:
+        ca = "ca3"
+    data["ca"] = ca
     data.set_index('time', inplace=True)
     data = data.drop(['tag'], axis=1)
     dbclient.write_points(data, 'realtime', field_columns=['value'])
