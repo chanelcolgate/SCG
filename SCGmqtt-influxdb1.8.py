@@ -21,7 +21,16 @@ def on_message(client, userdata, msg):
     data.replace({'parameter_trans':{'klt':'Sum. Volume', 'tld':'Set point rate', 'tlph':'Actual rate', 'nsd':'Set point capacity', 'nsph':'Actual capacity'}}, inplace=True)
     data.replace({'feeder_trans':{'c1':'Clinker 1', 'c2':'Clinker 2', 'c3':'Clinker 3', 'pg2':'Additives 2', 'pgm':'New additives', 'thachcao':'Plaster', 'pg3':'Additives 3', 'trobay':'Fly ash'}}, inplace=True)
     data['topic'] = topic
-    data['time'] = datetime.datetime.utcnow()
+    ts = datetime.datetime.utcnow()
+    h = ts.hour
+    data['time'] = ts
+    if h >= 0 and h < 8:
+        shift = 'shift 1'
+    if h >= 8 and h < 16:
+        shift = 'shift 2'
+    if h >= 16 and h <=23:
+        shift = 'shift 3'
+    data['shift'] = shift
     data.set_index('time', inplace=True)
     data = data.drop(['tag'], axis=1)
     dbclient.write_points(data, 'realtime', field_columns=['value'])
