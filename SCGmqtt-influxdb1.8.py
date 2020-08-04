@@ -19,7 +19,7 @@ def on_message(client, userdata, msg):
     data[['device', 'parameter']] = data.tag.str.split(':', expand=True)
     data[['parameter_trans', 'feeder_trans']] = data.parameter.str.split('_', expand=True)
     data.replace({'parameter_trans':{'klt':'Sum. Volume', 'tld':'Set point rate', 'tlph':'Actual rate', 'nsd':'Set point capacity', 'nsph':'Actual capacity'}}, inplace=True)
-    data.replace({'feeder_trans':{'c1':'Clinker VCM', 'c2':'Clinker SG 1', 'c3':'Clinker SG 2', 'pg2':'Plaster 1', 'pgm':'Mapei', 'thachcao':'Plaster 2', 'pg3':'ND Blackstone', 'trobay':'Fly ash'}}, inplace=True)
+    data.replace({'feeder_trans':{'c1':'Clinker VCM', 'c2':'Clinker SG 1', 'c3':'Clinker SG 2', 'pg2':'Gypsum 1', 'pgm':'Mapei', 'thachcao':'Gypsum 2', 'pg3':'ND Blackstone', 'trobay':'Fly ash'}}, inplace=True)
     data['topic'] = topic
     ts = datetime.datetime.utcnow()
     h = ts.hour
