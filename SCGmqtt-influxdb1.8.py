@@ -27,7 +27,7 @@ def on_message(client, userdata, msg):
     
     data.replace({'parameter_1':{'klt':'sv', 'tld':'spr', 'tlph':'ar', 'nsd':'spc', 'nsph':'ac', 'vt':'fs', 'ts':'mf', 'kl':'fv'}}, inplace=True)
     data.replace({'parameter_2':{'c1':'f1', 'c2':'f2', 'c3':'f3', 'pg2':'f4', 'pg3':'f5', 'trobay':'f6', 'thachcao':'f7', 'pgm':'f8', 'dong':'i', 'nhietvao':'it', 'nhietra':'ot', 'nhietdaubac':'ct', 'ts':'mf'}}, inplace=True)
-    data.replace({'device_1':{'PLC1':'', 'PLC2':'', 'PLC3':'', 'vantoc':'mf', 'tong':'fa'}}, inplace=True)
+    data.replace({'device_1':{'PLC1':'', 'PLC2':'', 'PLC3':'', 'vantoc':'fs', 'tong':'fa'}}, inplace=True)
     data.replace({'device_2':{'c1':'f1', 'c2':'f2', 'c3':'f3', 'pg2':'f4', 'pg3':'f5', 'trobay':'f6', 'thachcao':'f7', 'klt':'sv', 'tld':'spr', 'tlph':'ar', 'nsd':'spc', 'nsph':'ac'}}, inplace=True)
     
     # topic
@@ -50,7 +50,7 @@ def on_message(client, userdata, msg):
     # clean data    
     data.set_index('time', inplace=True)
     data = data.drop(['tag'], axis=1)
-    data = data[data['parameter_1'] != 'mf']
+    data = data[data['parameter_1'] != 'fs']
     
     df1 = data[data['parameter_2'].str.contains('f1|f2|f3|f4|f5|f6|f7|f8', regex=True, na=False)].copy()
     df1.drop(['device_1', 'device_2'], axis=1, inplace=True)
@@ -60,7 +60,7 @@ def on_message(client, userdata, msg):
     df2.drop(['device_1', 'device_2'], axis=1, inplace=True)
     df2.rename(columns={"parameter_1": "device", "parameter_2": "parameter"}, inplace=True)
     
-    df3 = data[data['device_1'].str.contains('mf', regex=True, na=False)].copy()
+    df3 = data[data['device_1'].str.contains('fs', regex=True, na=False)].copy()
     df3.drop(['parameter_1', 'parameter_2'], axis=1, inplace=True)
     df3.rename(columns={"device_1": "parameter", "device_2": "device"}, inplace=True)
     
@@ -79,6 +79,8 @@ def on_message(client, userdata, msg):
         cement = 'PCB'
     df['cement'] = cement
     
+    #df.to_csv('test.csv')
+    #print('done')
     # write to database
     dbclient.write_points(df, 'realtime', field_columns=['value'])
 
