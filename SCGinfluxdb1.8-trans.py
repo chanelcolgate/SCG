@@ -9,7 +9,7 @@ def sumvolume():
         dbclient.query('select last(value) - first(value) + max(value)*((max(value)-last(value))/(max(value)-last(value))) as sumvolume \
                         into sumvolume \
                         from realtime \
-                        where parameter =~ /klt/ AND time <= $upper \
+                        where parameter =~ /sv/ AND time <= $upper \
                         group by time(1h),*', bind_params={'upper':upper})
     else:
         lower = dbclient.query('select * from sumvolume order by time desc limit 1')['sumvolume'].index[0].strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -17,8 +17,8 @@ def sumvolume():
         dbclient.query('select last(value) - first(value) + max(value)*((max(value)-last(value))/(max(value)-last(value))) as sumvolume \
                         into sumvolume \
                         from realtime \
-                        where parameter =~ /klt/ and time >= $lower and time <= $upper \
-                        group by *,time(1h)', bind_params={'lower':lower, 'upper':upper})
+                        where parameter =~ /sv/ AND time >= $lower AND time <= $upper \
+                        group by time(1h),*', bind_params={'lower':lower, 'upper':upper})
 
 import time
 while True:
